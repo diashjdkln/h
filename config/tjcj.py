@@ -2,7 +2,7 @@
 from config import _Report
 
 
-class ExampleHealthReport(_Report):
+class tceduHealthReport(_Report):
     """
     此为示例报表，请勿直接使用
     以下的变量都需要适配修改，可能需要根据实际情况增加或只需要部分变量，
@@ -12,24 +12,19 @@ class ExampleHealthReport(_Report):
     def __init__(self, username, password, school_id=''):
         _Report.__init__(self, username, password, school_id)
         '''↓↓↓↓↓↓↓↓↓↓修改此处的form id、enc以及打卡名称↓↓↓↓↓↓↓↓↓↓↓'''
-        self._form_id = ''
-        self._enc = ''
-        self._reporter_name = '健康打卡示例'
+        self._form_id = '303523'
+        self._enc = '667b52ba082f28176929b0cf53f604ed'
+        self._reporter_name = '晚点名打卡'
         '''↑↑↑↑↑↑↑↑↑↑修改此处的form id、enc以及打卡名称↑↑↑↑↑↑↑↑↑↑↑'''
 
         '''↓↓↓↓↓↓↓↓↓↓粘贴修改以下内容↓↓↓↓↓↓↓↓↓↓↓'''
-        # 对应打卡当天日期的id，格式 yyyy-MM-dd
-        self._day_id = -1
-        # 对应打卡时的时间的id，格式 yyyy-MM-dd HH:mm
+        self._day_id = 39
         self._report_time_id = -1
-        # 对应打卡时的温度的id，范围 36.3-36.7
         self._temperature_ids = []
-        # 对应打卡时需要下拉选择的id
         self._options_ids = []
-        # 内部使用的id
         self._hasAuthority_ids = []
-        # 内部使用的id
         self._isShow_ids = []
+
         '''↑↑↑↑↑↑↑↑↑↑粘贴修改以上内容↑↑↑↑↑↑↑↑↑↑↑'''
 
     def _clean_form_data(self):
@@ -69,6 +64,6 @@ class ExampleHealthReport(_Report):
             elif f['id'] in self._isShow_ids:
                 # 内部使用的id
                 f['isShow'] = False
-
+                                    
         self._today_form_data = form_data
         return form_data
