@@ -1,0 +1,67 @@
+name: Health Report
+
+on:
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Check Secrets
+        env:
+          users: ${{ secrets.USERS }}
+          new_users: ${{ secrets.NEWUSERS }}
+        run: |
+          echo "Checking Secrets"
+          if [[ $users == '' && $new_users == '' ]]; then
+            echo "未正确设置Secrets，请阅读README.md"
+            exit 1
+          fi
+
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - name: Set Environment
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Start Report
+        env:
+          users: ${{ secrets.USERS }}
+          new_users: ${{ secrets.NEWUSERS }}
+          send: ${{ secrets.SEND }}
+          new_send: ${{ secrets.NEWSEND }}
+          log_password: ${{ secrets.LOGPASS }}
+          sleep_time: ${{ secrets.SLEEPTIME }}
+        run: |
+          if [[ $log_password == '' ]]; then
+            python -u main.py gh
+          else
+            python -u main.py gh > output.log
+          fi
+      - name: Encrypt Log
+        env:
+          users: ${{ secrets.USERS }}
+          new_users: ${{ secrets.NEWUSERS }}
+          log_password: ${{ secrets.LOGPASS }}
+        if: env.log_password != ''
+        run: |
+          sudo apt-get install -y p7zip-full
+          7z a -p${{ env.log_password }} -mx0 -mhe log.7z output.log
+      - name: Upload Log
+        env:
+          users: ${{ secrets.USERS }}
+          new_users: ${{ secrets.NEWUSERS }}
+          log_password: ${{ secrets.LOGPASS }}
+        if: env.log_password != ''
+        uses: actions/upload-artifact@v2
+        with:
+          name: logs
+          path: ${{ github.workspace }}/log.7z
+      - name: Delete Log and Session
+        run: |
+          rm -f output.log
+          rm -rf session/*.sess
+          rm -f log.7z
