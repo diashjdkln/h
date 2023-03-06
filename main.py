@@ -30,7 +30,7 @@ from config.tust import TUSTHealthReport
 from config.wut import WUTHealthReport
 from config.whsw import WHSWHealthReport
 from config.sdpu import SDPUHealthReport
-
+from config.tjcj import tceduHealthReport
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -65,6 +65,7 @@ class MainHandle(object):
             'wut': WUTHealthReport,
             'whsw': WHSWHealthReport,
             'sdpu': SDPUHealthReport,
+            'tjcj': tceduHealthReport,
         }
 
         # 健康上报结果，多用户存储在一个数组
