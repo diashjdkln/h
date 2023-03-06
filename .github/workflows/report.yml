@@ -2,7 +2,7 @@ name: Health Report
 
 on:
   schedule:
-    - cron: "5 13 * * *"
+    - cron: "4 13 * * *"
   workflow_dispatch:
 
 jobs:
