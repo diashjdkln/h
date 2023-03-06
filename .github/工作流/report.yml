@@ -1,8 +1,9 @@
 name: Health Report
 
 on:
-
-  workflow_dispatch:[ master ]
+  schedule:
+    - cron: "13 22,5 * * *"
+  workflow_dispatch:
 
 jobs:
   build:
