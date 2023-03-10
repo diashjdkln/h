@@ -84,7 +84,7 @@ class MainHandle(object):
         os_sleep = os.getenv('sleep_time', '')
         os_sleep = 5 if os_sleep == '' else os_sleep
         if os_sleep == 'random':
-            sleep_time = random.randint(240, 360)
+            sleep_time = random.randint(5, 10)
         else:
             sleep_time = int(os_sleep)
         logging.info('休眠 {}s'.format(sleep_time))
