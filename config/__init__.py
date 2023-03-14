@@ -148,7 +148,8 @@ class _Report(object):
             "version": "5",
             "checkCode": self._check_code,
             "enc": self._enc,
-            "formData": form_data
+            "formData": form_data,
+            "submitVersion":"1628068378000"
         }
         resp = self._session.post(save_api, data=data)
         self._today_report_result = json.loads(resp.text)
