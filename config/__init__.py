@@ -150,7 +150,6 @@ class _Report(object):
             "enc": self._enc,
             "formData": form_data,
             "submitVersion":"1678925165000"
-"
         }
         resp = self._session.post(save_api, data=data)
         self._today_report_result = json.loads(resp.text)
