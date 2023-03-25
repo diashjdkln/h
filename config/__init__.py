@@ -33,6 +33,7 @@ class _Report(object):
         self._last_form_data = {}
         self._today_form_data = {}
         self._check_code = ''
+        self._submit_version= ''
         self._today_report_result = {}
 
     @staticmethod
@@ -135,6 +136,26 @@ class _Report(object):
             self._result = "%s获取%s校验码失败" % (self._username_masked, self._reporter_name)
             raise Exception(self._result)
 
+            
+    def _get_submit_version(self):
+        """
+        访问表单页面，并获取 check code
+        """
+        params = {
+            "formId": self._form_id,
+            "formAppId": "",
+            'enc': self._enc
+        }
+        form_url = "https://office.chaoxing.com/data/apps/forms/fore/user/info"
+        resp = self._session.get(form_url, params=params)
+        uptime = re.findall(r".updatetime.:(.*?),", resp.text)
+        if uptime:
+            self._submit_version = uptime[0]
+            return self._submit_version
+        else:
+            self._result = "%s获取%ssubmitversion失败" % (self._username_masked, self._reporter_name)
+            raise Exception(self._result)
+            
     def _today_report(self) -> dict:
         """
         上报今日信息
@@ -149,7 +170,7 @@ class _Report(object):
             "checkCode": self._check_code,
             "enc": self._enc,
             "formData": form_data,
-            "submitVersion":"1679624151000"
+            "submitVersion": self._submit_version,
         }
         resp = self._session.post(save_api, data=data)
         self._today_report_result = json.loads(resp.text)
@@ -160,6 +181,7 @@ class _Report(object):
         self._get_last_form_data()
         self._clean_form_data()
         self._get_check_code()
+        self._get_submit_version()
         report_result = self._today_report()
         if report_result['success']:
             self._result = '%s填报%s(id=%s)成功' % (self._username_masked, self._reporter_name, self._form_id)
